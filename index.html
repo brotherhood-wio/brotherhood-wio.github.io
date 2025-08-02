@@ -1,13 +1,12 @@
 ﻿<html>
 <head>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+SC&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+SC+SemiBold&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
             background-color: rgb(25, 25, 25);
-            font-family: 'Cormorant SC', serif;
-            font-size: 32px;
+            font-family: 'Arial', serif;
+            font-weight: 0;
+            font-size: 24px;
             color: white;
         }
         #map-container {
@@ -19,6 +18,7 @@
             display: block;
         }
         .region {
+            filter: saturate(0%);
             opacity: 0.25;
             position: absolute;
         }
@@ -38,16 +38,16 @@
             user-select: none;        /* Запрещает выделение текста/изображения */
         }
         .c_prev {
-            vertical-align: bottom;
+            vertical-align: middle;
         }
         .sector-number {
             font-size: 32px;
             position: absolute;
             font-family: sans-serif;
             font-weight: 1000;
-            color: black;
+            color: white;
             z-index: 10;
-            pointer-events: none;
+            /* pointer-events: none; */
         }
         .controls {
             margin: 10px;
@@ -57,26 +57,26 @@
             display: inline-block;
         }
         @font-face {
-            font-family: 'Cormorant SC SemiBold';
-            src: url('fonts/CormorantSC-SemiBold.woff2') format('woff2');
+            font-family: 'Arial Black';
+            src: url('fonts/arial-black.woff2') format('woff2');
             font-weight: 600;
             font-style: normal;
             font-display: swap;
         }
 
         .myheader {
-            font-family: 'Cormorant SC SemiBold', serif;
-            font-size: 64px;
+            font-family: 'Arial Black', serif;
+            font-size: 45px;
+            font-weight: 600;
             opacity: 0.7;
             cursor: pointer;
             display: inline-block;
         }
         header-m {
             margin-left: 50px;
-            font-family: 'Cormorant SC SemiBold', serif;
+            font-family: 'Arial Black', serif;
             font-size: 45px;
-            opacity: 0.7;
-            cursor: pointer;
+            /*opacity: 0.7;*/
             display: inline-block;
         }
         .foldout {
@@ -137,11 +137,11 @@
             margin-bottom: 0px;
         }
         a {
-        text-decoration: none; /* убирает подчёркивание */
-        color: rgb(200, 220, 255); /* наследует цвет от родителя */
+            text-decoration: none; /* убирает подчёркивание */
+            color: rgb(200, 220, 255); /* наследует цвет от родителя */
         }
         th {
-            font-family: 'Cormorant SC SemiBold', serif;
+            font-family: 'Arial Black', serif;
         }
         td, th {
             padding-left: 20px;
@@ -160,9 +160,13 @@
 
         /* Новые стили для сворачиваемых секций */
         .section {
-            margin-bottom: 0px;
+            display: inline-block;
+            vertical-align: top;
+            white-space: normal;
+            margin: 10px;
         }
         .section-content {
+            display: none;
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease-out;
@@ -192,14 +196,57 @@
         o {
         margin-left: 20px;
         }
+        .section-container {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto; /* если содержимое не помещается */
+            gap: 30px; /* расстояние между элементами */
+        }
+        .read-data {
+            font-size: 20px;
+        }
+        l {
+            cursor: pointer; /* чтобы курсор менялся при наведении */
+            text-decoration: underline;
+            color: #e4f5ff;
+        }
+        .black-screen {
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            position: fixed;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+        }
+        .center-container {
+            z-index: 10000;
+            margin: 10%;
+            margin-bottom: 10%;
+            width: 80%;
+            height: 80%;
+            overflow: auto;
+        }
+        .close-cross {
+            font-size: 100px;
+            z-index: 10001;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+        }
+        reddish {
+            /*color: red;*/
+        }
+        greenish {
+            /*color: rgb(138, 255, 138);*/
+        }
+        grayish {
+            color: rgb(190, 190, 190);
+        }
     </style>
 </head>
 <body>
-    <div class="controls">
-        <label>
-            <input type="checkbox" id="showSectorNumbers"> Показывать номера секторов
-        </label>
-    </div>
     <div id="map-container">
         <img id="base-map" src="images/Map.png" alt="Map image">
         <img src="images/ОИС.jpg" alt="Overlay" style="opacity: 0.0; z-index: 1; position: absolute; top: 0; left: 0; width: 100%;">
@@ -247,36 +294,62 @@
         <img class="region"        style="z-index: 2; left: 3.02%; top: 71.80%;"  width="16%" src="images/regions/IB.png">
         <img class="region flipx"  style="z-index: 2; left: 84.63%; top: 73.63%;" width="15%" src="images/regions/NV.png">
 
-        <img style="z-index: 4; position: absolute; top: 49%; left: 9%; height: 10%;" src="images/war.png">
-        <img style="z-index: 4; position: absolute; top: 37%; left: 71.5%; height: 10%;" src="images/peace.png">
-        <img style="z-index: 4; position: absolute; top: 29%; left: 68%; height: 10%;" src="images/peace.png">
-        <img style="z-index: 4; position: absolute; top: 20%; left: 62%; height: 10%;" src="images/peace.png">
-        <img style="z-index: 4; position: absolute; top: 53%; left: 89.5%; height: 10%;" src="images/peace.png">
+        <img style="z-index: 4; position: absolute; top: 40%; left: 13%; height: 10%;" src="images/war.png">
+        <img style="z-index: 4; position: absolute; top: 37%; left: 69.5%; height: 10%;" src="images/peace.png">
+        <img style="z-index: 4; position: absolute; top: 29%; left: 66%; height: 10%;" src="images/war.png">
+        <img style="z-index: 4; position: absolute; top: 20%; left: 47%; height: 10%;" src="images/war.png">
+        <img style="z-index: 4; position: absolute; top: 53%; left: 87.5%; height: 10%;" src="images/peace.png">
     </div>
     
+    <div class="controls">
+        <label>
+            <input type="checkbox" id="showSectorNumbers" style="transform: scale(2);"> Показывать номера секторов
+            <input type="checkbox" id="showCountryPlans" style="transform: scale(2); margin-left: 20px;">Показывать планы стран
+        </label>
+        <grayish><img style="padding-left: 40px; filter: brightness(0.75);" height="20px" src="images/i.png" alt="i">При нехватке актуальных развед. данных они прогнозируются по известным</grayish>
+    </div>
+
+    <div style="display: none;" class="black-screen">
+        <div class="center-container">
+            
+        </div>
+        <div class="close-cross" onclick="CloseBlackScreen()">
+            X
+        </div>
+    </div>
     
-    &sep
-    
-    <div class="section">
-        <div class="section-header initial-open" onclick="toggleSection(this)">
-            <span class="myheader">Что это за сайт?</span>
-            <span class="section-icon">▼</span>
+    <div class="section-contaner">
+    <span class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <span class="myheader">&sel<br>О сайте</span>
         </div>
         <div class="section-content">
             <obz>Э</obz>тот сайт — неоффициальный сайт по Братству WIO. Он создан не разработчиками игры, а игроками. Вот две основные мотивации сайта:<ul>
             <li>Создание возможности влиться в комьюнити даже тех людей, у которых нет Телеграма.</li>
-            <li>Создать удобный способ быстро и просто узнавать все новости, информацию и аналитику в одном месте.</li>
+            <br>
+            <li>Создать удобный способ быстро и легко узнавать все новости, информацию и аналитику в одном месте. Не нужно запускать игру, чтобы увидеть территории. Не нужно тратить много времени, разбираясь в новостях мировой политики.</li>
             </ul>
             
         </div>
-    </div>
+    </span>
+
+    <span class="section">
+        <div class="section-header" id="initial-open" onclick="toggleSection(this)">
+            <span class="myheader">&sel<br>Новости</span>
+        </div>
+        <div class="section-content">
+            <obz>Э</obz>тот сайт — неоффициальный сайт по Братству WIO. Он создан не разработчиками игры, а игроками. Вот две основные мотивации сайта:<ul>
+            <li>Создание возможности влиться в комьюнити даже тех людей, у которых нет Телеграма.</li>
+            <br>
+            <li>Создать удобный способ быстро и легко узнавать все новости, информацию и аналитику в одном месте. Не нужно запускать игру, чтобы увидеть территории. Не нужно тратить много времени, разбираясь в новостях мировой политики.</li>
+            </ul>
+            
+        </div>
+    </span>
     
-    &sep
-    
-    <div class="section">
+    <span class="section">
         <div class="section-header" onclick="toggleSection(this)">
-            <span class="myheader">Прекращения огня</span>
-            <span class="section-icon">▼</span>
+            <span class="myheader">&sel<br>Политика</span>
         </div>
         <div class="section-content">
             <table style="font-size: 32px; border: 1px; border-color: black;">
@@ -294,7 +367,7 @@
                 <tbody>
                     <tr>
                         <td rowspan="3">Рития</td>
-                        <td><center>&peace</center></td>
+                        <td><center>&war</center></td>
                         <td>Нордхайм</td>
                     </tr>
                     <tr>
@@ -307,7 +380,7 @@
                     </tr>
                     <tr>
                         <td rowspan="3">Нордхайм</td>
-                        <td><center>&peace</center></td>
+                        <td><center>&war</center></td>
                         <td>Рития</td>
                     </tr>
                     <tr>
@@ -315,12 +388,12 @@
                         <td>Новгория</td>
                     </tr>
                     <tr>
-                        <td><center>&peace</center></td>
+                        <td><center>&war</center></td>
                         <td>Иберия</td>
                     </tr>
                     <tr>
                         <td rowspan="3">Иберия</td>
-                        <td><center>&peace</center></td>
+                        <td><center>&war</center></td>
                         <td>Нордхайм</td>
                     </tr>
                     <tr>
@@ -347,76 +420,725 @@
                 </tbody>
             </table>
             
-            <span style="font-size: 20px;"><span height="0px">&peace</span> — Ведется прекращение огня
+            <span style="font-size: 20px;">&peace — Ведется прекращение огня
             <br>&war — Прекращение огня не ведется
             <br>
             <br>Прекращение огня устанавливает избранная игроками власть. Оно устанавливается, чтобы войска страны случайно не атаковали союзника.</span>
+                <!--<span style="font-size: 24px;"><br><br><header-m>Миp: </header-m><o>В мире проходит олимпиада, все объявили мир всем на время олимпиады. Только Иберия с Ритией вероломно начали конфликт.</span>-->
+            
         </div>
-    </div>
+    </span>
     
-    &sep
-    
-    <div class="section">
+    <span class="section">
         <div class="section-header" onclick="toggleSection(this)">
-            <span class="myheader">Мировые взаимоотношения</span>
-            <span class="section-icon">▼</span>
+            <span class="myheader">&sel<br>Полит.объекты</span>
         </div>
         <div class="section-content">
-            <br><header-m>Миp: </header-m><o>В мире проходит олимпиада, все объявили мир всем на время олимпиады. Только Иберия с Ритией вероломно начали конфликт.
-            <br><header-m>Рития: </header-m><o>Рития изначально живет припеваюче, имет большую территорию. До недавнего времени имела только одного противника — Нордхайм. Но некоторое время назад у нее начал нарастать конфликт с Иберией, на 16 и 17 секторах.
+            <span style="font-size: 32px;"><br><header-m>Рития</header-m><o><no_replace>Страна - Рития, появилась в благоприятном краю карты - противники были слабы, 
+                либо имели узкий фронт с ней. Быстро набрала территорий. Так быстро расширилась, что успела получить превосходство на обоих перевалах. Но продала Южный 
+                Перевал Иберии в обмен на 16 и 17 сектора. Столкнулась фронтом с Нордхаймом, но продвинулась на два сектора и остановилась. Приняла <l>Ритийско-Иберийский Мир</l>,
+                инициированный Иберией. После стала косвенным союзником Новгории, так как обе были в союзе с Иберией. На фоне агрессии правителей Нордхайма и тотального 
+                угнетения ими Новгории был учрежден военный альянс <l>"Тройственный Союз"</l>. После долгого времени войны без перемен Рития, так и не получившая проданных 
+                ей территорий, решила действовать агрессивно - сняла прекращение огня и вторглась в Иберию. Такие действия были расценены как нападение, и <l>Ритийско-Иберийский
+                Мир</l> был распущен, началась война. Это стало одним из факторов распада <l>Альянса</l>. На нее активно начал наступать и Нордхайм из-за условий <l>Нордхаймовско-Иберийского Мира</l>.</no_replace></span>
+            <br>
+            <span style="font-size: 32px;"><br><header-m>Иберия</header-m><o><no_replace>
+                Страна - Иберия, имела невероятно сильную дипломатию. Появившись под боком сильной Ритии, смогла выторговать у нее перевал в обмен на два сектора. 
+                Заключила <l>Ритийско-Иберийский Мир</l>, а потом и <l>Новгорийско-Иберийский Мир</l>. Стала катализатором в формировании <l>Тройственного Союза</l>. До недавнего 
+                времени воевала только с Нордхаймом. Недавно же последовала череда неудачных решений, очернивших ее репутацию. Она объявила <l>Нордхаймовско-Иберийский 
+                Мир</l>. Сам по себе этот мир Иберия, как всегда, продала по большой цене условий, но в ходе последующих переговоров дала Нордхайму фору, и часть условий 
+                внезапно оказалась невыгодна. Также этот Мир пошатнул Тройственный Союз. В момент объявления этого Мира Иберия фактически вышла из <l>Альянса</l> по причине 
+                неисполнения обязательств. После этого Рития, так и не получившая обменянных в начале истории секторов, решила применить отчаянные меры и сняла прекращение огня, 
+                чтобы ввести войска в сектора. Иберия расценила это как нападение и тоже отключила прекращение огня. После этого Ритийско-Иберийский Мир был 
+                расторгнут, а Тройственный Союз поставлен на грань существования. Рития и Новгория все еще вели боевые действия против Нордхайма, но Рития делала это 
+                только из-за опасений за свою безопасность.</no_replace></span>
+            <br>
+            <span style="font-size: 32px;"><br><header-m>Нордхайм</header-m><o><no_replace>Страна - Нордхайм, заспавнился в исключительном положении на карте. Имел четыре 
+                смежных со столицей сектора, что помогло ему быстро развиваться. Он набрал много территорий, смог отстоять многие из них. Но что-то у их <l>правителя</l> в голове
+                щелкнуло, и он объявил войну всем странам мира и полностью распустил зарождающиеся союзничества. Забанил разработчиков в Телеграм-чате страны и объявил "Начало веселья". 
+                Особое внимание он уделил наступлению на Новгорию. Это частное событие было названо <l>Мясным Штурмом</l>, который на долгое время вперед сделал Нордхайм и Новгорию злейшими врагами.
+                Правителя свергли и избрали нового. Но к этому времени репутация Нордхайма в глазах всего мира уже была уничтожена. Все страны мира объединились в <l>Тройственный Союз</l>, целью которого поставили 
+                сдерживание, истощение и дальнейший распил Нордхайма. Однако все остановилось на истощении. Нордхайм окружили до пяти секторов, и он оставался самой маленькой страной мира около половины месяца. 
+                Однако за это время сформировалась постоянная и надежная власть, которая очень успешно организовала Фарм-Союзы. Также игроки Нордхайма были замечены в читерстве и накрутке армий, что косвенно подтвердил 
+                знакомый одного из читеров. В общем, за это время страна адаптировалась и обрела самое быстрое производство солдат в Братстве. Как говорится, тяжелые времена порождают 
+                сильных людей. Уже тогда сдерживание усложнилось, а истощение Нордхайма прекратилось. Через некоторое время они приняли Мир от Иберии. Это сильно ударило по Альянсу. 
+                После конфликта Ритии и Иберии, а также кооперации в этом деле Иберии с Нордхаймом, <l>Альянс</l> потерял смысл и считается уничтоженным.</no_replace></span>
+            <br>
+            <span style="font-size: 32px;"><br><header-m>Новгория</header-m><o><no_replace>Страна - Новгория, появилась в неплохом месте, но с плохими соседями. 
+                Уже со второго дня Братства они стали с Нордхаймом злейшими врагами, даже когда их территории еще не соприкоснулись. А <l>Мясной Штурм</l> заставил их 
+                ненавидеть друг друга настолько сильно, насколько это вообще возможно. Позже Новгория с радостью приняла Мир от Иберии и стала косвенным союзником Ритии, 
+                так как все они союзничали с Иберией. Такой тройной союз привел к формированию <l>Тройственного Союза</l>. Долгое время Альянс и в частности Новгория воевали против 
+                Нордхайма, но в итоге не смогли его уничтожить. Плюсом для Новгории стал выход из окружения Нордхайма, так как технически до последнего момента она не граничила
+                вообще ни с кем, кроме Нордхайма. А стала она граничить с Иберией. Также после прохождения Олимпиад она решила заключить мир с ним не по случаю Олимпиады, а 
+                на постоянной основе.</no_replace></span>
+            <br>
+            <span style="font-size: 32px;"><br><header-m>Ритийско-Иберийский Мир</header-m><o><no_replace>Союз - Ритийско-Иберийский Мир,
+                <div>
+                    <div>Статус: <reddish>Расторгнут</reddish></div>
+                    <div>Причина: <reddish>Война</reddish></div>
+                    <div>Цель: Развитие мирных отношений Ритии и Иберии. Кооперация для защиты от Нордхайма.</div>
+                    <div>Текст/Договор: <grayish>[Ожидает рассекречивания]</grayish></div>
+                </div>
+            </no_replace></span>
+            <br>
+            <span style="font-size: 32px;"><br><header-m>Новгорийско-Иберийский Мир</header-m><o><no_replace>Союз - Новгорийско-Иберийский Мир, 
+                <div>
+                    <div>Статус: <greenish>Действителен</greenish></div>
+                    <div>Цель: Развитие мирных отношений Новгории и Иберии. Кооперация для защиты от Нордхайма.</div>
+                    <div>Текст/Договор: <grayish>[Засекречено]</grayish></div>
+                </div>
+            </no_replace></span>
+            <br>
+            <span style="font-size: 32px;"><br><header-m>Нордхаймовско-Иберийский Мир</header-m><o><no_replace>Союз - Нордхаймовско-Иберийский Мир,
+                <div>
+                    <div>Статус: <greenish>Действителен</greenish></div>
+                    <div>Цель: Развитие мирных отношений Нордхайма и Иберии. Не подтверждено: Подрыв внутрисоюзных отношений Альянса, нанесение удара по Ритии</div>
+                    <div>Текст/Договор:</div>
+                    <div style="margin-left: 40px;">
+                        I. При нападении на Иберию Нордхайм обязан атаковать обидчика<br>
+                        Ост. пункты: <grayish>[Засекречено]</grayish>
+                    </div>
+                </div>
+            </no_replace></span>
+            <br>
+            <span style="font-size: 32px;"><br><header-m>Тройственный Союз</header-m><o><no_replace>Альянс - Тройственный Союз,
+                <div>
+                    <div>Статус: <reddish>Уничтожен</reddish></div>
+                    <div>Цель: Сдерживание, истощение и <l>распил Нордхайма</l></div>
+                    <div>Текст/Договор: <grayish>[Засекречено]</grayish></div>
+                </div>
+            </no_replace></span>
+            <br>
+            <span style="font-size: 32px;"><br><header-m>Новгорийско-Нордхаймовский Мир</header-m><o><no_replace>Союз - Новгорийско-Нордхаймовский Мир,
+                <div>
+                    <div>Статус: <greenish>Действителен</greenish></div>
+                    <div>Цель: Развитие мирных отношений Новгории и Нордхайма. Предотвращение всемирных конфликтов.</div>
+                    <div>Текст/Договор: </div>
+                    <div style="margin-left: 40px;">
+                        Новгория; Нордхайм - далее: вы, вашего; мы, наши.<br>
+                        Министр Иностранных Дел - далее МИД.<br>
+                        Министр Внутренних Дел - далее МВД.<br><br>
+
+                        Это наши и ваши границы, которые мы взаимно признаем (22 регион вы (Новгория) также признаете за Нордхаймом в случае его получения нами)<br>
+                        Вы не нападаете на Иберию<br>
+                        Мы не забираем у Ритии больше регионов, кроме 8-го<br>
+                        Член вашего парламента, некий "<l>Кто-то</l>"<br>
+                        <l>Кто-то</l> не будет участвовать в переговорах с нами, только в самых редких случаях, не чаще раза в месяц<br>
+                        Договор является действительным до момента его нарушения одной из сторон или взаимного расторжения<br>
+                        Подписали:<br>
+                        <div style="margin-left: 40px;">
+                            Представитель Нордхайма: @Ivan_always_winner<br>
+                            Член парламента Нордхайма: @Platual<br>
+                            МИД Нордхайма: @Vladislav3106IceFox<br>
+                            МВД Новгории: @syslyk<br>
+                            Член парламента Новгории: @PRONZATEL1<br>
+                        </div>
+                        <grayish>(Рассекречено членом власти Нордхайма)</grayish>
+                    </div>
+                </div>
+            </no_replace></span>
         </div>
-    </div>
+    </span>
+    
+    <div style="padding: 40px;" id="read-data">read-data</div>
 
     <script>
-        const elements = document.querySelectorAll('.initial-open');
-
-        elements.forEach(element => {
-        toggleSection.call(element, element);
-        });
-        
-        // Функция для переключения состояния секции
-        function toggleSection(header) {
-            const section = header.parentElement;
-            section.classList.toggle('open');
-        }
-        
-        const news_filter = 0;
-        function toggleFoldout(header) {
-                const foldout = header.parentElement;
-                foldout.classList.toggle('open');
-            }
-        function SelectOption(option) {
-            const HeaderSelection = document.getElementsByClassName("foldout-header")[0]
-            document.getElementById("foldout-name").innerHTML = option.innerHTML
-            toggleFoldout(HeaderSelection)
-            //news_filter = filter;
-        }
+        // Конфигурационные данные
+        const CONFIG = {
+            // Данные о перемещениях войск
+            TROOPS_MOVE_DATA: {
+                "Ritia": [
+                    {from: "RT", to: 4},
+                    {from: 4, to: 16},
+                    {from: 1, to: 5},
+                    {from: 5, to: 4},
+                    {from: 5, to: 14},
+                    {from: 14, to: 17},
+                    {from: 6, to: 15},
+                    {from: 15, to: 14},
+                    {from: 2, to: 6}
+                ],
+                "Nordheim": [
+                    {from: 3, to: 11},
+                    {from: 11, to: 10},
+                    {from: "NR", to: 12},
+                    {from: "NR", to: 13},
+                    {from: 12, to: 26},
+                    {from: 10, to: 23},
+                    {from: 10, to: 9}
+                ],
+                "Iberia": [
+                    {from: 22, to: 23},
+                    {from: 20, to: 19},
+                    {from: 21, to: 20},
+                    {from: 19, to: 15},
+                    {from: 29, to: 18},
+                    {from: 18, to: 15},
+                    {from: "IB", to: 27},
+                    {from: "IB", to: 28},
+                    {from: "IB", to: 35},
+                    {from: 35, to: 29},
+                    {from: 30, to: 29},
+                    {from: 27, to: 16},
+                    {from: 28, to: 17}
+                ],
+                "Novgoria": [
+                    {from: 36, to: 31},
+                    {from: 31, to: 36},
+                    {from: 38, to: "NV"},
+                    {from: "NV", to: 34},
+                    {from: 37, to: 33},
+                    {from: 33, to: 25},
+                    {from: 25, to: 24},
+                    {from: 32, to: 25}
+                ]
+            },
             
-        document.documentElement.setAttribute('translate', 'no');
-        //               1   2   3   4   5   6   7   8   9   10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30  31  32  33  34  35  36  37  38  Ri  Nr  Ib  Nv
-        const Sectors = [0,  0,  1,  0,  0,  0,  0,  0,  0,  1,  1,  1,  1,  0,  0,  0,  2,  2,  2,  2,  2,  2,  2,  3,  3,  1,  2,  2,  2,  2,  3,  3,  3,  3,  2,  3,  3,  3,  0,  1,  2,  3, 3]
+            // Цвета стран
+            COUNTRY_COLORS: {
+                "Ritia": "#3498db",    // Синий
+                "Nordheim": "#bfbfbf", // Серый
+                "Iberia": "#f39c12",   // Оранжевый
+                "Novgoria": "#2ecc71"  // Зеленый
+            },
+            
+            // Фильтры секторов
+            SECTOR_FILTERS: {
+                0: "hue-rotate(190deg) saturate(78%) brightness(75%)",     // Синий
+                1: "saturate(0%) brightness(225%)",                         // Белый
+                2: "hue-rotate(61deg) saturate(55%) brightness(225%)",     // Оранжевый
+                3: "hue-rotate(160deg) saturate(75%) brightness(75%)"       // Зеленый
+            },
+            
+            // Принадлежность секторов к странам (будет загружено из файла)
+            SECTORS: [],
+            
+            // Замены текста на иконки
+            TEXT_REPLACEMENTS: {
+                'Ритийско-Иберийский Мир': '<span><img class="c_prev" height="35px" src="images/Ritian-Iberian-Peace.png">Ритийско<span>-</span><span>Иберийский</span> <span>Мир</span></span>',
+                'Новгорийско-Иберийский Мир': '<span><img class="c_prev" height="35px" src="images/Novgorish-Iberian-Peace.png">Новгорийско<span>-</span><span>Иберийский</span> <span>Мир</span></span>',
+                'Нордхаймовско-Иберийский Мир': '<no_replace><span><img class="c_prev" height="35px" src="images/Nordheimish-Iberian-Peace.png">Нордхaймовско<span>-</span><span>Иберийский</span> <span>Мир</span></span></no_replace>',
+                'Новгорийско-Нордхаймовский Мир': '<span><img class="c_prev" height="35px" src="images/Novgorish-Nordheimish-Peace.png">Новгорийско<span>-</span><span>Hордхаймовский</span> <span>Мир</span></span>',
+                'Тройственный Союз': '<span style="color: hsl(0, 0%, 40%);"><img class="c_prev" height="45px" src="images/Trial-Alliance.png">Тройственный Союз</span>',
 
-        const SectorFilter = {
-            0: "hue-rotate(190deg) saturate(78%) brightness(75%)",     // Синий
-            1: "saturate(0%) brightness(225%)",                   // Белый (без изменений)
-            2: "hue-rotate(61deg) saturate(55%) brightness(225%)", // Оранжевый
-            3: "hue-rotate(160deg) saturate(75%) brightness(75%)", // Зелёный
+                'Рития': '<span style="color: hsl(201, 93%, 30%);"><img class="c_prev" height="35px" src="images/Ritia.png">Рития</span>',
+                'Ритией': '<span style="color: hsl(201, 93%, 30%);"><img class="c_prev" height="35px" src="images/Ritia.png">Ритией</span>',
+                'Нордхайм': '<span style="color: hsl(47, 14%, 80%);"><img class="c_prev" height="35px" src="images/Nordheim.png">Нордхайм</span>',
+                'Иберия': '<span style="color: hsl(43, 91%, 45%);"><img class="c_prev" height="35px" src="images/Iberia.png">Иберия</span>',
+                'Иберией': '<span style="color: hsl(43, 91%, 45%);"><img class="c_prev" height="35px" src="images/Iberia.png">Иберией</span>',
+                'Новгория': '<span style="color: hsl(128, 74%, 35%);"><img class="c_prev" height="35px" src="images/Novgoria.png">Новгория</span>',
+                
+                '&peace': '<img class="c_prev" height="50px" src="images/peace.png">',
+                '&war': '<img class="c_prev" height="50px" src="images/war.png">',
+                '&sep': '<img style="margin-top: 20px; opacity: 0.5;" width="100%" height="3px" src="images/white1x1.png">',
+                '&sel': '<img style="display: none; margin-top: 0px; opacity: 1.0;" width="100%" height="10px" src="images/white1x1.png">'
+            }
         };
 
-        function UpdateSectors() {
-            const regions = document.getElementsByClassName("region");
+        // Глобальные переменные
+        let arrowsContainer = null;
+        let news_filter = 0;
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            loadConfig().then(() => {
+                initArrowsContainer();
+                initCountryPlansCheckbox();
+                replaceTextWithIcons(document.body);
+                initSectorNumbers();
+                initSections();
+                updateSectors();
+                scaleRegions(1, 1);
+                AddLinkListeners();
+            });
+        });
+
+        // Загрузка конфига из файла
+        async function loadConfig() {
+            try {
+                const response = await fetch('Datas/CONFIG.txt');
+                const text = await response.text();
+                
+                // Ищем секцию SECTORS в файле
+                const sectorsMatch = text.match(/SECTORS\s*=\s*\[([^\]]+)\]/);
+                if (sectorsMatch && sectorsMatch[1]) {
+                    // Преобразуем строку в массив чисел
+                    CONFIG.SECTORS = sectorsMatch[1].split(',').map(item => parseInt(item.trim()));
+                } else {
+                    console.error('Не удалось найти SECTORS в CONFIG.txt');
+                    // Значения по умолчанию
+                    //CONFIG.SECTORS = [0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 1, 2, 2, 2, 2, 3, 3, 3, 3, 2, 3, 3, 3, 0, 1, 2, 3, 3];
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки CONFIG.txt:', error);
+                // Значения по умолчанию
+                //CONFIG.SECTORS = [0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 1, 2, 2, 2, 2, 3, 3, 3, 3, 2, 3, 3, 3, 0, 1, 2, 3, 3];
+            }
+        }
+
+        // ====================== ФУНКЦИИ СТРЕЛОК ======================
+
+        /**
+         * Инициализирует контейнер для стрелок
+         */
+        function initArrowsContainer() {
+            arrowsContainer = document.createElement('div');
+            arrowsContainer.id = 'arrows-container';
+            arrowsContainer.style.position = 'absolute';
+            arrowsContainer.style.top = '0';
+            arrowsContainer.style.left = '0';
+            arrowsContainer.style.width = '100%';
+            arrowsContainer.style.height = '100%';
+            arrowsContainer.style.pointerEvents = 'none';
+            arrowsContainer.style.zIndex = '5';
+            document.getElementById('map-container').appendChild(arrowsContainer);
             
-            Array.from(regions).forEach((element, i) => {
-                element.style.filter = SectorFilter[Sectors[i]];
-                console.log("SRC:"+regions[i].getAttribute('src')+" ID:"+(i+1).toString()+" COUNTRY:"+Sectors[i+1]);
+            // Обработчик изменения размера окна
+            window.addEventListener('resize', function() {
+                if (document.getElementById('showCountryPlans')?.checked) {
+                    toggleCountryPlans(true);
+                }
             });
         }
-        
-        function ScaleRegions(scaleX = 1, scaleY = 0.5) {
+
+        /**
+         * Проверяет, принадлежит ли сектор стране
+         */
+        function isSectorOwnedByCountry(sector, countryIndex) {
+            if (sector === 'RT') return countryIndex === 0;
+            if (sector === 'NR') return countryIndex === 1;
+            if (sector === 'IB') return countryIndex === 2;
+            if (sector === 'NV') return countryIndex === 3;
+            
+            const sectorNum = typeof sector === 'string' ? parseInt(sector) : sector;
+            return CONFIG.SECTORS[sectorNum - 1] === countryIndex;
+        }
+
+        /**
+         * Инициализирует чекбокс для отображения планов стран
+         */
+        function initCountryPlansCheckbox() {
+            document.getElementById('showCountryPlans').addEventListener('change', function() {
+                toggleCountryPlans(this.checked);
+            });
+        }
+
+        /**
+         * Рассчитывает смещение для дублирующихся стрелок
+         */
+        function calculateOffset(index, total, fromRect, toRect) {
+            if (total <= 1) return {x: 0, y: 0};
+            
+            // Определяем направление стрелки
+            const dx = toRect.left - fromRect.left;
+            const dy = toRect.top - fromRect.top;
+            
+            // Нормализуем вектор направления
+            const length = Math.sqrt(dx * dx + dy * dy);
+            const nx = dx / length;
+            const ny = dy / length;
+            
+            // Перпендикулярный вектор
+            const px = -ny;
+            const py = nx;
+            
+            // Максимальное смещение (10px между стрелками)
+            const maxOffset = 10;
+            const offset = (index - (total - 1) / 2) * maxOffset;
+            
+            return {
+                x: px * offset,
+                y: py * offset
+            };
+        }
+
+        /**
+         * Создает SVG стрелку между двумя секторами
+         */
+        function createArrow(fromSector, toSector, color = 'red', index = 0, total = 1) {
+            // Находим элементы секторов
+            const fromRegion = document.querySelector(`.region[src*="f${fromSector}.png"], .region[src*="${fromSector}.png"]`);
+            const toRegion = document.querySelector(`.region[src*="f${toSector}.png"], .region[src*="${toSector}.png"]`);
+            
+            if (!fromRegion || !toRegion) return null;
+            
+            // Получаем координаты центров секторов
+            const fromRect = fromRegion.getBoundingClientRect();
+            const toRect = toRegion.getBoundingClientRect();
+            const containerRect = document.getElementById('map-container').getBoundingClientRect();
+            
+            // Рассчитываем смещение для дублирующихся стрелок
+            const offset = calculateOffset(index, total, fromRect, toRect);
+            
+            const fX = fromRect.left + fromRect.width/2 - containerRect.left + offset.x;
+            const fY = fromRect.top + fromRect.height/2 - containerRect.top + offset.y;
+            const tX = toRect.left + toRect.width/2 - containerRect.left + offset.x;
+            const tY = toRect.top + toRect.height/2 - containerRect.top + offset.y;
+
+            const fromX = (fromRect.left + fromRect.width/2 - containerRect.left + offset.x)*0.8 + tX*0.2;
+            const fromY = (fromRect.top + fromRect.height/2 - containerRect.top + offset.y)*0.8 + tY*0.2;
+            const toX = (toRect.left + toRect.width/2 - containerRect.left + offset.x)*0.6 + fX*0.4;
+            const toY = (toRect.top + toRect.height/2 - containerRect.top + offset.y)*0.6 + fY*0.4;
+            
+            // Создаем SVG стрелку
+            const svgNS = "http://www.w3.org/2000/svg";
+            const svg = document.createElementNS(svgNS, "svg");
+            svg.setAttribute('width', '100%');
+            svg.setAttribute('height', '100%');
+            svg.style.position = 'absolute';
+            svg.style.top = '0';
+            svg.style.left = '0';
+            svg.style.overflow = 'visible';
+            
+            // Линия стрелки с анимацией
+            const line = document.createElementNS(svgNS, "line");
+            line.setAttribute('x1', fromX);
+            line.setAttribute('y1', fromY);
+            line.setAttribute('x2', fromX);
+            line.setAttribute('y2', fromY);
+            line.setAttribute('stroke', color);
+            line.setAttribute('stroke-width', '3');
+            line.setAttribute('marker-end', `url(#arrowhead-${color})`);
+            
+            // Анимация рисования стрелки
+            const animateX = document.createElementNS(svgNS, "animate");
+            animateX.setAttribute('attributeName', 'x2');
+            animateX.setAttribute('from', fromX);
+            animateX.setAttribute('to', toX);
+            animateX.setAttribute('dur', '0.5s');
+            animateX.setAttribute('begin', `${index * 0.1}s`);
+            animateX.setAttribute('fill', 'freeze');
+            
+            const animateY = document.createElementNS(svgNS, "animate");
+            animateY.setAttribute('attributeName', 'y2');
+            animateY.setAttribute('from', fromY);
+            animateY.setAttribute('to', toY);
+            animateY.setAttribute('dur', '0.5s');
+            animateY.setAttribute('begin', `${index * 0.1}s`);
+            animateY.setAttribute('fill', 'freeze');
+            
+            line.appendChild(animateX);
+            line.appendChild(animateY);
+            svg.appendChild(line);
+            
+            // Маркер-стрелка (если еще не создан)
+            if (!document.getElementById(`arrowhead-${color}`)) {
+                const defs = document.createElementNS(svgNS, "defs");
+                const marker = document.createElementNS(svgNS, "marker");
+                marker.setAttribute('id', `arrowhead-${color}`);
+                marker.setAttribute('markerWidth', '10');
+                marker.setAttribute('markerHeight', '7');
+                marker.setAttribute('refX', '0');
+                marker.setAttribute('refY', '3.5');
+                marker.setAttribute('orient', 'auto');
+                
+                const polygon = document.createElementNS(svgNS, "polygon");
+                polygon.setAttribute('points', '0 0, 10 3.5, 0 7');
+                polygon.setAttribute('fill', color);
+                
+                marker.appendChild(polygon);
+                defs.appendChild(marker);
+                svg.appendChild(defs);
+            }
+            
+            return svg;
+        }
+
+        /**
+         * Группирует одинаковые стрелки
+         */
+        function groupArrows(moves) {
+            const groups = {};
+            
+            moves.forEach(move => {
+                const key = `${move.from}-${move.to}`;
+                if (!groups[key]) {
+                    groups[key] = [];
+                }
+                groups[key].push(move);
+            });
+            
+            return groups;
+        }
+
+        /**
+         * Включает/выключает отображение планов стран
+         */
+        function toggleCountryPlans(show) {
+            arrowsContainer.innerHTML = '';
+            
+            if (show) {
+                const countryNames = Object.keys(CONFIG.TROOPS_MOVE_DATA);
+                
+                for (let countryIndex = 0; countryIndex < countryNames.length; countryIndex++) {
+                    const country = countryNames[countryIndex];
+                    const moves = CONFIG.TROOPS_MOVE_DATA[country];
+                    const filteredMoves = moves.filter(move => 
+                        isSectorOwnedByCountry(move.from, countryIndex) || 
+                        isSectorOwnedByCountry(move.to, countryIndex)
+                    );
+                    
+                    const grouped = groupArrows(filteredMoves);
+                    
+                    for (const key in grouped) {
+                        const group = grouped[key];
+                        group.forEach((move, index) => {
+                            const arrow = createArrow(
+                                move.from, 
+                                move.to, 
+                                CONFIG.COUNTRY_COLORS[country] || '#ff0000', 
+                                index, 
+                                group.length
+                            );
+                            if (arrow) {
+                                arrowsContainer.appendChild(arrow);
+                            }
+                        });
+                    }
+                }
+            }
+        }
+
+        // ====================== ФУНКЦИИ СЕКЦИЙ ======================
+
+        /**
+         * Инициализирует секции
+         */
+        function initSections() {
+            // Закрываем все секции при клике на заголовок
+            document.querySelectorAll('.section-header').forEach(header => {
+                header.addEventListener('click', () => toggleSection(header));
+            });
+            
+            // Открываем начальную секцию
+            setTimeout(() => {
+                const initialSection = document.getElementById('initial-open') || 
+                                    document.querySelector('.initial-open');
+                if (initialSection) {
+                    toggleSection(initialSection);
+                }
+            }, 100);
+        }
+
+        /**
+         * Переключает секцию
+         */
+        function toggleSection(header) {
+            // Закрываем все секции и убираем подсветку
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('open');
+                const sectionHeader = section.querySelector('.section-header');
+                const selImg = sectionHeader?.querySelector('img[src="images/white1x1.png"]');
+                if (selImg) {
+                    selImg.style.display = 'none';
+                }
+            });
+            
+            // Открываем текущую секцию и подсвечиваем её
+            const section = header.parentElement;
+            section.classList.add('open');
+            const selImg = header.querySelector('img[src="images/white1x1.png"]');
+            if (selImg) {
+                selImg.style.display = 'inline';
+            }
+            
+            // Обновляем содержимое read-data
+            const readdata = section.querySelector('.section-content').innerHTML;
+            document.getElementById("read-data").innerHTML = readdata;
+            
+            // Обновляем номера секторов
+            updateSectorNumbersBasedOnContent();
+        }
+
+        /**
+         * Выбирает опцию в выпадающем списке
+         */
+        function selectOption(option) {
+            const headerSelection = document.querySelector(".foldout-header");
+            document.getElementById("foldout-name").innerHTML = option.innerHTML;
+            toggleFoldout(headerSelection);
+        }
+
+        function AddLinkListeners() {
+            document.addEventListener("click", function(event) {
+                if (event.target.matches("l")) {
+                    event.preventDefault();
+
+                    const textBlock = document.querySelector(".center-container")
+                    const blackScreen = document.querySelector(".black-screen")
+
+                    console.log(event.target.innerHTML);
+                    textBlock.innerHTML = `Произошла ошибка. Это пояснение не существует.`;
+
+                    if(event.target.innerHTML == "Ритийско-Иберийский Мир"||event.target.innerHTML == `Ритийско-Иберийский
+                Мир`) {
+                        textBlock.innerHTML = `<span style="font-size: 32px;"><br><header-m>Ритийско-Иберийский Мир</header-m><o><no_replace>Союз - Ритийско-Иберийский Мир,
+                <div>
+                    <div>Статус: <reddish>Расторгнут</reddish></div>
+                    <div>Причина: <reddish>Война</reddish></div>
+                    <div>Цель: Развитие мирных отношений Ритии и Иберии. Кооперация для защиты от Нордхайма.</div>
+                    <div>Текст/Договор: <grayish>[Ожидает рассекречивания]</grayish></div>
+                </div>
+            </no_replace></span>`;
+                    }
+                    else if(event.target.innerHTML == "Новгорийско-Иберийский Мир") {
+                        textBlock.innerHTML = `<span style="font-size: 32px;"><br><header-m>Новгорийско-Иберийский Мир</header-m><o><no_replace>Союз - Новгорийско-Иберийский Мир, 
+                <div>
+                    <div>Статус: <greenish>Действителен</greenish></div>
+                    <div>Цель: Развитие мирных отношений Новгории и Иберии. Кооперация для защиты от Нордхайма.</div>
+                    <div>Текст/Договор: <grayish>[Засекречено]</grayish></div>
+                </div>
+            </no_replace></span>`;
+                    }
+                    else if(event.target.innerHTML == "Нордхаймовско-Иберийский Мир"||event.target.innerHTML == "Нордхаймовско-Иберийского Мира"||event.target.innerHTML == `Нордхаймовско-Иберийский 
+                Мир`) {
+                        textBlock.innerHTML = `<span style="font-size: 32px;"><br><header-m>Нордхаймовско-Иберийский Мир</header-m><o><no_replace>Союз - Нордхаймовско-Иберийский Мир,
+                <div>
+                    <div>Статус: <greenish>Действителен</greenish></div>
+                    <div>Цель: Развитие мирных отношений Нордхайма и Иберии. Не подтверждено: Подрыв внутрисоюзных отношений Альянса, нанесение удара по Ритии</div>
+                    <div>Текст/Договор:</div>
+                    <div style="margin-left: 40px;">
+                        I. При нападении на Иберию Нордхайм обязан атаковать обидчика<br>
+                        Ост. пункты: <grayish>[Засекречено]</grayish>
+                    </div>
+                </div>
+            </no_replace></span>`;
+                    }
+                    else if(event.target.innerHTML == "Тройственный Союз"||event.target.innerHTML == `"Тройственный Союз"`||event.target.innerHTML == "Альянс"||event.target.innerHTML == "Альянса"||event.target.innerHTML == "Тройственного Союза") {
+                        textBlock.innerHTML = `<span style="font-size: 32px;"><br><header-m>Тройственный Союз</header-m><o><no_replace>Альянс - Тройственный Союз,
+                <div>
+                    <div>Статус: <reddish>Уничтожен</reddish></div>
+                    <div>Цель: Сдерживание, истощение и <l>распил Нордхайма</l></div>
+                    <div>Текст/Договор: <grayish>[Засекречено]</grayish></div>
+                </div>
+            </no_replace></span>`;
+                    }
+                    else if(event.target.innerHTML == "Новгорийско-Нордхаймовский Мир") {
+                        textBlock.innerHTML = `<span style="font-size: 32px;"><br><header-m>Новгорийско-Нордхаймовский Мир</header-m><o><no_replace>Союз - Новгорийско-Нордхаймовский Мир,
+                <div>
+                    <div>Статус: <greenish>Действителен</greenish></div>
+                    <div>Цель: Развитие мирных отношений Новгории и Нордхайма. Предотвращение всемирных конфликтов.</div>
+                    <div>Текст/Договор: </div>
+                    <div style="margin-left: 40px;">
+                        Новгория; Нордхайм - далее: вы, вашего; мы, наши.<br>
+                        Министр Иностранных Дел - далее МИД.<br>
+                        Министр Внутренних Дел - далее МВД.<br><br>
+
+                        Это наши и ваши границы, которые мы взаимно признаем (22 регион вы (Новгория) также признаете за Нордхаймом в случае его получения нами)<br>
+                        Вы не нападаете на Иберию<br>
+                        Мы не забираем у Ритии больше регионов, кроме 8-го<br>
+                        Член вашего парламента, некий "<l>Кто-то</l>"<br>
+                        <l>Кто-то</l> не будет участвовать в переговорах с нами, только в самых редких случаях, не чаще раза в месяц<br>
+                        Договор является действительным до момента его нарушения одной из сторон или взаимного расторжения<br>
+                        Подписали:<br>
+                        <div style="margin-left: 40px;">
+                            Представитель Нордхайма: @Ivan_always_winner<br>
+                            Член парламента Нордхайма: @Platual<br>
+                            МИД Нордхайма: @Vladislav3106IceFox<br>
+                            МВД Новгории: @syslyk<br>
+                            Член парламента Новгории: @PRONZATEL1<br>
+                        </div>
+                        <grayish>(Рассекречено членом власти Нордхайма)</grayish>
+                    </div>
+                </div>
+            </no_replace></span>`;
+                    }
+                    else if(event.target.innerHTML == "правителя") {
+                        textBlock.innerHTML = `<span style="font-size: 32px;"><br><header-m><img src="images/Fill_genri.jpg" style="border-radius: 16.5px; border: #dddddd00; height: 33px;">Fill_genri</header-m><o><no_replace>Правитель, Фил Генри
+                <div>
+                   Является бывшим правителем Нордхайма. Был оффициально избран первым представителем Нордхайма. Известен тем, что устроил "Веселое время". 
+                   Забанил разработчиков игры в Телеграм-чате страны, и устроил там анархию. После этого объявил войну всем странам мира и полностью разорвал 
+                   все зарождающиеся дипломатические отношения. В частности этих войн, был Мясной Штурм, организованный им против Новгории. Этому наступлению 
+                   он уделил внимания больше всех других. Через некоторое время этого безумия его сняли с должности представителя и переизбрали нового. После этого
+                   он еще немного времени считал, что народ Нордхайма ему "поклоняется", вероятно из-за его мании величества.
+                    <br> <br>
+                   Единственное что извесно о контактах с этим человеком это его Телеграм-аккаунт <a href="https://t.me/@ImperatorNordheim">t.me/@ImperatorNordheim</a>, но он был удален.
+                </div>
+            </no_replace></span>`;
+                    }
+                    else if(event.target.innerHTML == "Мясной Штурм"||event.target.innerHTML == "Мясным Штурмом") {
+                        textBlock.innerHTML = `<img src="images/MeatAssault.jpg" style="width: 100%;"><div style="font-size: 32px;"><br><header-m>Fill_genri</header-m><o><no_replace>Правитель, Фил Генри
+                <div>
+                   Является бывшим правителем Нордхайма. Был оффициально избран первым представителем Нордхайма. Известен тем, что устроил "Веселое время". 
+                   Забанил разработчиков игры в Телеграм-чате страны, и устроил там анархию. После этого объявил войну всем странам мира и полностью разорвал 
+                   все зарождающиеся дипломатические отношения. В частности этих войн, был Мясной Штурм, организованный им против Новгории. Этому наступлению 
+                   он уделил внимания больше всех других. Через некоторое время этого безумия его сняли с должности представителя и переизбрали нового. После этого
+                   он еще немного времени считал, что народ Нордхайма ему "поклоняется", вероятно из-за его мании величества.
+                    <br> <br>
+                   Единственное что извесно о контактах с этим человеком это его Телеграм-аккаунт <a href="https://t.me/@ImperatorNordheim">t.me/@ImperatorNordheim</a>, но он был удален.
+                </div>
+            </no_replace></div>`;
+                    }
+                    else if(event.target.innerHTML == "распил Нордхайма") {
+                        textBlock.innerHTML = `<img src="images/partitionOfNordheim.jpg" style="width: 100%;"><div style="font-size: 32px;"><br><header-m>Договор о разделе Нoрдхайма</header-m><o><no_replace>
+                <div>
+<br>
+                    1) В связи с агрессивной внешней политикой Нордхайма, отказом от всех предложенных мирных программ, а также со внутренней политикой "войны до полной победы", будущее существование государства Нордхайм не является возможным.<br>
+<br>
+                    2) Раздел проходит следующим образом:<br>
+<br>
+                    Рития получает северный перевал и северный выход к столице Нордхайма.<br>
+<br>
+                    Иберия получает Южный перевал и западный выход к столице Нордхайма.<br>
+<br>
+                    Новгория получает Варгстад и поля восточнее него.<br>
+<br>
+                    3) По возможности, Новгория введёт войска в столицу, как страна, принявшая на себя основной удар Нордхайма.<br>
+<br>
+                    4) На время войны с Нордхаймом, а также на протяжении 1 недели, после победы над Нордхаймом, Новгория, Рития и Иберия являются союзниками и поддерживают порядок в войсках, стараясь недопускать атак на границе.<br>
+<br>
+                    Подпись от Новгории: МИД Новгории, @BAPEHUKcBUWHEU<br>
+<br>
+                    Подпись от Ритии: МИД Ритии,<br>
+                    Ритийский журналист, @ART_trooper1705<br>
+<br>
+                    Подпись от Иберии: МИД Иберии,<br>
+                    As, @as3d104s24p3<br>
+                </div>
+            </no_replace></div>`;
+                    }
+                    else if(event.target.innerHTML == "Кто-то") {
+                        textBlock.innerHTML = `<span style="font-size: 32px;"><br><header-m><img src="images/Kto-to.jpg" style="border-radius: 16.5px; border: #dddddd00; height: 33px;">Кто-то</header-m><o><no_replace>МИД Новгории, Кто-то(второе имя BAPEHUK)
+                <div>
+                   "Кто-то" - очевидно, вполне конкретный человек, хотя его ник иногда вызывает недопонимания. Он является МИДом Новгории. Отличился в всемирной политике участием в составлении договора о <l>распиле Нордхайма</l>, а так же тем, что настолько 
+                   разозлил дипломатов Нордхайма, что они на договорном уровне установили запрет на участии его в переговорах Новгория-Нордхайм. Он может учавствовать в них не чаще чем раз в месяц.
+                </div>
+            </no_replace></div>`;
+                    }
+
+                    blackScreen.style.display = "inline";
+                    replaceTextWithIcons(blackScreen);
+                }
+            });
+        }
+
+        function CloseBlackScreen() {
+            document.getElementsByClassName("black-screen")[0].style.display = "none";
+        }
+
+        // ====================== ФУНКЦИИ СЕКТОРОВ ======================
+
+        /**
+         * Обновляет стили секторов
+         */
+        function updateSectors() {
+            const regions = document.getElementsByClassName("region");
+            
+            Array.from(regions).forEach((region, index) => {
+                if (index < CONFIG.SECTORS.length) {
+                    region.style.filter = CONFIG.SECTOR_FILTERS[CONFIG.SECTORS[index]] || '';
+                }
+            });
+        }
+
+        /**
+         * Масштабирует регионы
+         */
+        function scaleRegions(scaleX = 1, scaleY = 1) {
             const regions = document.querySelectorAll('.region');
-        
+            
             regions.forEach(region => {
-                // Scale Y (top)
+                // Масштабирование по Y (top)
                 const currentTop = region.style.top;
                 if (currentTop) {
                     const numericValue = parseFloat(currentTop);
@@ -426,7 +1148,7 @@
                     }
                 }
 
-                // Scale X (left)
+                // Масштабирование по X (left)
                 const currentLeft = region.style.left;
                 if (currentLeft) {
                     const numericValue = parseFloat(currentLeft);
@@ -438,71 +1160,154 @@
             });
         }
 
-        function toggleSectorNumbers() {
-            const showNumbers = document.getElementById('showSectorNumbers').checked;
-            const mapContainer = document.getElementById('map-container');
+        // ====================== ФУНКЦИИ НОМЕРОВ СЕКТОРОВ ======================
+
+        /**
+         * Инициализирует функционал номеров секторов
+         */
+        function initSectorNumbers() {
+            // Добавляем обработчик изменения галочки
+            document.getElementById('showSectorNumbers')?.addEventListener('change', toggleSectorNumbers);
+            
+            // Начинаем наблюдение за изменениями в read-data
+            observeReadDataChanges();
+        }
+
+        /**
+         * Обновляет номера секторов на основе контента
+         */
+        function updateSectorNumbersBasedOnContent() {
+            const showNumbers = document.getElementById('showSectorNumbers')?.checked;
+            const readData = document.getElementById('read-data');
             
             // Удаляем старые цифры
             document.querySelectorAll('.sector-number').forEach(el => el.remove());
             
-            if (showNumbers) {
-                const regions = document.querySelectorAll('.region');
-                
-                regions.forEach(region => {
-                    const src = region.getAttribute('src');
-                    const match = src.match(/f(\d+)\.png$/) || src.match(/(RT|NR|IB|NV)\.png$/);
-                    
-                    if (match) {
-                        const sectorNumber = match[1] || match[2];
-                        const numberElement = document.createElement('div');
-                        numberElement.className = 'sector-number';
-                        numberElement.textContent = sectorNumber;
-                        
-                        // Получаем реальные координаты региона (в пикселях)
-                        const regionRect = region.getBoundingClientRect();
-                        const containerRect = mapContainer.getBoundingClientRect();
-                        
-                        // Переводим в проценты относительно контейнера
-                        const containerWidth = containerRect.width;
-                        const containerHeight = containerRect.height;
-                        
-                        const centerX = ((regionRect.left + regionRect.width / 2) - containerRect.left) / containerWidth * 100;
-                        const centerY = ((regionRect.top + regionRect.height / 2) - containerRect.top) / containerHeight * 100;
-                        
-                        // Позиционируем цифру
-                        numberElement.style.position = 'absolute';
-                        numberElement.style.left = `${centerX}%`;
-                        numberElement.style.top = `${centerY}%`;
-                        numberElement.style.transform = 'translate(-50%, -50%)';
-                        
-                        mapContainer.appendChild(numberElement);
-                    }
-                });
-            }
+            if (!showNumbers || !readData) return;
+            
+            // Получаем номера секторов из блока read-data
+            const sectorNumbersFromReadData = [];
+            const readDataText = readData.textContent || readData.innerText;
+            const numbersInReadData = readDataText.match(/\b\d+\b/g) || [];
+            
+            // Преобразуем найденные числа в массив уникальных номеров
+            numbersInReadData.forEach(num => {
+                const n = parseInt(num);
+                if (n >= 1 && n <= 38 && !sectorNumbersFromReadData.includes(n)) {
+                    sectorNumbersFromReadData.push(n);
+                }
+            });
+            
+            // Проверяем специальные обозначения
+            const hasRT = readDataText.includes('RT');
+            const hasNR = readDataText.includes('NR');
+            const hasIB = readDataText.includes('IB');
+            const hasNV = readDataText.includes('NV');
+            
+            // Обновляем номера на карте
+            updateSectorNumbers(sectorNumbersFromReadData, {hasRT, hasNR, hasIB, hasNV});
         }
 
-        function replaceTextWithIcons() {
-            // Словарь замен: ключ - текст для поиска, значение - HTML для замены
-            const replacements = {
-                'Ritia': '<span style="color: hsl(201, 93%, 30%);"><img class="c_prev" height="35px" src="images/Ritia.png">Ritia</span>',
-                'Nordheim': '<span style="color: hsl(47, 14%, 80%);"><img class="c_prev" height="35px" src="images/Nordheim.png">Nordheim</span>',
-                'Iberia': '<span style="color: hsl(43, 91%, 45%);"><img class="c_prev" height="35px" src="images/Iberia.png">Iberia</span>',
-                'Novgoria': '<span style="color: hsl(128, 74%, 35%);"><img class="c_prev" height="35px" src="images/Novgoria.png">Novgoria</span>',
+        /**
+         * Обновляет отображение номеров секторов
+         */
+        function updateSectorNumbers(sectorNumbers = [], specialFlags = {}) {
+            const showAll = sectorNumbers.length === 0;
+            const mapContainer = document.getElementById('map-container');
+            if (!mapContainer) return;
+            
+            document.querySelectorAll('.region').forEach(region => {
+                const src = region.getAttribute('src');
+                const match = src.match(/f(\d+)\.png$/) || src.match(/(RT|NR|IB|NV)\.png$/);
                 
-                'Рития': '<span style="color: hsl(201, 93%, 30%);"><img class="c_prev" height="35px" src="images/Ritia.png">Рития</span>',
-                'Ритией': '<span style="color: hsl(201, 93%, 30%);"><img class="c_prev" height="35px" src="images/Ritia.png">Ритией</span>',
-                'Нордхайм': '<span style="color: hsl(47, 14%, 80%);"><img class="c_prev" height="35px" src="images/Nordheim.png">Нордхайм</span>',
-                'Иберия': '<span style="color: hsl(43, 91%, 45%);"><img class="c_prev" height="35px" src="images/Iberia.png">Иберия</span>',
-                'Новгория': '<span style="color: hsl(128, 74%, 35%);"><img class="c_prev" height="35px" src="images/Novgoria.png">Новгория</span>',
-                
-                '&peace': '<img class="c_prev" height="50px" src="images/peace.png">',
-                '&war': '<img class="c_prev" height="50px" src="images/war.png">',
-                '&sep': '<img style="margin-top: 20px; opacity: 0.5;" width="100%" height="3px" src="images/white1x1.png">'
-            };
+                if (match) {
+                    const sectorNumber = match[1] || match[2];
+                    const isSpecial = !match[1];
+                    const numericSector = match[1] ? parseInt(match[1]) : 0;
+                    
+                    // Определяем, нужно ли показывать этот номер
+                    let shouldShowNumber = false;
+                    
+                    if (!showAll) {
+                        if (isSpecial) {
+                            shouldShowNumber = (sectorNumber === 'RT' && specialFlags.hasRT) || 
+                                            (sectorNumber === 'NR' && specialFlags.hasNR) || 
+                                            (sectorNumber === 'IB' && specialFlags.hasIB) || 
+                                            (sectorNumber === 'NV' && specialFlags.hasNV);
+                        } else {
+                            shouldShowNumber = sectorNumbers.includes(numericSector);
+                        }
+                    } else {
+                        shouldShowNumber = true;
+                    }
+                    
+                    if (shouldShowNumber) {
+                        createSectorNumberMarker(sectorNumber, region, mapContainer);
+                    }
+                }
+            });
+        }
 
-            // Находим все текстовые узлы в документе
+        /**
+         * Создает маркер с номером сектора
+         */
+        function createSectorNumberMarker(sectorNumber, region, mapContainer) {
+            const numberElement = document.createElement('div');
+            numberElement.className = 'sector-number';
+            numberElement.textContent = sectorNumber;
+            
+            // Получаем координаты центра региона
+            const regionRect = region.getBoundingClientRect();
+            const containerRect = mapContainer.getBoundingClientRect();
+            
+            const containerWidth = containerRect.width;
+            const containerHeight = containerRect.height;
+            
+            const centerX = ((regionRect.left + regionRect.width / 2) - containerRect.left) / containerWidth * 100;
+            const centerY = ((regionRect.top + regionRect.height / 2) - containerRect.top) / containerHeight * 100;
+            
+            // Позиционируем цифру
+            numberElement.style.position = 'absolute';
+            numberElement.style.left = `${centerX}%`;
+            numberElement.style.top = `${centerY}%`;
+            numberElement.style.transform = 'translate(-50%, -50%)';
+            
+            mapContainer.appendChild(numberElement);
+        }
+
+        /**
+         * Наблюдает за изменениями в read-data
+         */
+        function observeReadDataChanges() {
+            const readData = document.getElementById('read-data');
+            if (!readData) return;
+            
+            const observer = new MutationObserver(() => {
+                updateSectorNumbersBasedOnContent();
+            });
+            
+            observer.observe(readData, {
+                childList: true,
+                subtree: true,
+                characterData: true
+            });
+        }
+
+        /**
+         * Переключает отображение номеров секторов
+         */
+        function toggleSectorNumbers() {
+            updateSectorNumbersBasedOnContent();
+        }
+
+        // ====================== ФУНКЦИИ ЗАМЕНЫ ТЕКСТА ======================
+
+        /**
+         * Заменяет текстовые упоминания на иконки
+         */
+        function replaceTextWithIcons(obj) {
             const walker = document.createTreeWalker(
-                document.body,
+                obj,
                 NodeFilter.SHOW_TEXT,
                 null,
                 false
@@ -511,56 +1316,44 @@
             const nodes = [];
             let node;
             while (node = walker.nextNode()) {
-                // Проверяем каждый узел на наличие любого из искомых текстов
-                let hasReplacement = false;
-                for (const text in replacements) {
-                    if (node.nodeValue.includes(text)) {
-                        hasReplacement = true;
+                // Проверяем, находится ли узел внутри no_replace
+                let parent = node.parentNode;
+                let isInsideNoReplace = false;
+                
+                while (parent && parent !== document.body) {
+                    if (parent.nodeName === 'NO_REPLACE') {
+                        isInsideNoReplace = true;
                         break;
                     }
+                    parent = parent.parentNode;
                 }
-                if (hasReplacement) {
+                
+                if (!isInsideNoReplace && Object.keys(CONFIG.TEXT_REPLACEMENTS).some(text => node.nodeValue.includes(text))) {
                     nodes.push(node);
                 }
             }
 
-            // Заменяем все вхождения во всех узлах
             nodes.forEach(node => {
                 const parent = node.parentNode;
                 if (!parent || parent.nodeName === 'SCRIPT' || parent.nodeName === 'STYLE') return;
 
                 let html = node.nodeValue;
-                for (const text in replacements) {
+                for (const text in CONFIG.TEXT_REPLACEMENTS) {
                     html = html.replace(
                         new RegExp(text, 'g'),
-                        replacements[text]
+                        CONFIG.TEXT_REPLACEMENTS[text]
                     );
                 }
 
-                // Создаем временный элемент для вставки HTML
                 const temp = document.createElement('div');
                 temp.innerHTML = html;
 
-                // Заменяем текстовый узел на новые узлы
                 while (temp.firstChild) {
                     parent.insertBefore(temp.firstChild, node);
                 }
                 parent.removeChild(node);
             });
         }
-
-        // Вызываем функцию после загрузки страницы
-        window.addEventListener('DOMContentLoaded', function() {
-            replaceTextWithIcons();
-            
-            // Add event listener for the checkbox
-            document.getElementById('showSectorNumbers').addEventListener('change', toggleSectorNumbers);
-        });
-
-        ScaleRegions(1.03, 1.05);
-        document.getElementById('showSectorNumbers').checked = true;
-        toggleSectorNumbers();
-        UpdateSectors();
     </script>
 </body>
 </html>
