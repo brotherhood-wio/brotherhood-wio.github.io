@@ -666,13 +666,9 @@
                     CONFIG.SECTORS = sectorsMatch[1].split(',').map(item => parseInt(item.trim()));
                 } else {
                     console.error('Не удалось найти SECTORS в CONFIG.txt');
-                    // Значения по умолчанию
-                    //CONFIG.SECTORS = [0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 1, 2, 2, 2, 2, 3, 3, 3, 3, 2, 3, 3, 3, 0, 1, 2, 3, 3];
                 }
             } catch (error) {
                 console.error('Ошибка загрузки CONFIG.txt:', error);
-                // Значения по умолчанию
-                //CONFIG.SECTORS = [0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 1, 2, 2, 2, 2, 3, 3, 3, 3, 2, 3, 3, 3, 0, 1, 2, 3, 3];
             }
         }
 
