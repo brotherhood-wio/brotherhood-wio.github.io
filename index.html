@@ -656,8 +656,32 @@
         // Загрузка конфига из файла
         async function loadConfig() {
             try {
-                const response = await fetch('Datas/CONFIG.txt');
-                const text = await response.text();
+                // Сначала получаем список всех CONFIG файлов
+                const response = await fetch('Datas/');
+                const fileListText = await response.text();
+                
+                // Парсим HTML ответа (предполагая, что сервер возвращает список файлов)
+                const parser = new DOMParser();
+                const htmlDoc = parser.parseFromString(fileListText, 'text/html');
+                const links = htmlDoc.getElementsByTagName('a');
+                
+                // Находим файл CONFIG с максимальным номером
+                let maxConfigNum = -1;
+                for (let i = 0; i < links.length; i++) {
+                    const fileName = links[i].getAttribute('href');
+                    const match = fileName.match(/^CONFIG(\d+)\.txt$/i);
+                    if (match) {
+                        const num = parseInt(match[1]);
+                        if (num > maxConfigNum) {
+                            maxConfigNum = num;
+                        }
+                    }
+                }
+                
+                // Если нашли пронумерованный CONFIG, загружаем его, иначе пробуем CONFIG.txt
+                const configFile = maxConfigNum >= 0 ? `CONFIG${maxConfigNum}.txt` : 'CONFIG.txt';
+                const configResponse = await fetch(`Datas/${configFile}`);
+                const text = await configResponse.text();
                 
                 // Ищем секцию SECTORS в файле
                 const sectorsMatch = text.match(/SECTORS\s*=\s*\[([^\]]+)\]/);
@@ -665,10 +689,10 @@
                     // Преобразуем строку в массив чисел
                     CONFIG.SECTORS = sectorsMatch[1].split(',').map(item => parseInt(item.trim()));
                 } else {
-                    console.error('Не удалось найти SECTORS в CONFIG.txt');
+                    console.error(`Не удалось найти SECTORS в ${configFile}`);
                 }
             } catch (error) {
-                console.error('Ошибка загрузки CONFIG.txt:', error);
+                console.error('Ошибка загрузки конфигурации:', error);
             }
         }
 
