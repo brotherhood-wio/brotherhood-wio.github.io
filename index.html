@@ -667,11 +667,23 @@
                 // Загружаем указанный в индексе конфиг
                 const configResponse = await fetch(`Datas/${index.latest_config}`);
                 const text = await configResponse.text();
+
+                // Загружаем указанный в индексе конфиг
+                const pre_configResponse = await fetch(`Datas/${index.pre_latest_config}`);
+                const pre_text = await configResponse.text();
                 
                 const sectorsMatch = text.match(/SECTORS\s*=\s*\[([^\]]+)\]/);
                 if (sectorsMatch && sectorsMatch[1]) {
                     CONFIG.SECTORS = sectorsMatch[1].split(',').map(item => parseInt(item.trim()));
                     console.log(`Успешно загружен конфиг из ${index.latest_config}`);
+                } else {
+                    console.error(`Не удалось найти SECTORS в ${index.latest_config}`);
+                }
+
+                const pre_sectorsMatch = pre_text.match(/SECTORS\s*=\s*\[([^\]]+)\]/);
+                if (pre_sectorsMatch && pre_sectorsMatch[1]) {
+                    CONFIG.SECTORS = pre_sectorsMatch[1].split(',').map(item => parseInt(item.trim()));
+                    console.log(`Успешно загружен конфиг из ${index.pre_latest_config}`);
                 } else {
                     console.error(`Не удалось найти SECTORS в ${index.latest_config}`);
                 }
