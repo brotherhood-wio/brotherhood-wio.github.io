@@ -656,31 +656,31 @@
         // Загрузка конфига из файла
         async function loadConfig() {
             try {
-                // Сначала получаем список всех CONFIG файлов
+                // Сначала получаем список всех файлов в папке Datas/
                 const response = await fetch('Datas/');
-                const fileListText = await response.text();
+                const html = await response.text();
                 
-                // Парсим HTML ответа (предполагая, что сервер возвращает список файлов)
+                // Парсим HTML чтобы найти все CONFIGn.txt файлы
                 const parser = new DOMParser();
-                const htmlDoc = parser.parseFromString(fileListText, 'text/html');
-                const links = htmlDoc.getElementsByTagName('a');
+                const doc = parser.parseFromString(html, 'text/html');
+                const links = Array.from(doc.querySelectorAll('a'))
+                    .map(a => a.getAttribute('href'))
+                    .filter(href => href.match(/^CONFIG\d+\.txt$/i));
                 
-                // Находим файл CONFIG с максимальным номером
-                let maxConfigNum = -1;
-                for (let i = 0; i < links.length; i++) {
-                    const fileName = links[i].getAttribute('href');
-                    const match = fileName.match(/^CONFIG(\d+)\.txt$/i);
-                    if (match) {
-                        const num = parseInt(match[1]);
-                        if (num > maxConfigNum) {
-                            maxConfigNum = num;
-                        }
-                    }
+                if (links.length === 0) {
+                    console.error('Не найдено ни одного CONFIGn.txt файла в папке Datas/');
+                    return;
                 }
                 
-                // Если нашли пронумерованный CONFIG, загружаем его, иначе пробуем CONFIG.txt
-                const configFile = maxConfigNum >= 0 ? `CONFIG${maxConfigNum}.txt` : 'CONFIG.txt';
-                const configResponse = await fetch(`Datas/${configFile}`);
+                // Находим файл с максимальным номером
+                const latestConfig = links.reduce((max, current) => {
+                    const currentNum = parseInt(current.match(/\d+/)[0]);
+                    const maxNum = max ? parseInt(max.match(/\d+/)[0]) : -1;
+                    return currentNum > maxNum ? current : max;
+                }, '');
+                
+                // Загружаем найденный конфиг-файл
+                const configResponse = await fetch(`Datas/${latestConfig}`);
                 const text = await configResponse.text();
                 
                 // Ищем секцию SECTORS в файле
@@ -688,11 +688,12 @@
                 if (sectorsMatch && sectorsMatch[1]) {
                     // Преобразуем строку в массив чисел
                     CONFIG.SECTORS = sectorsMatch[1].split(',').map(item => parseInt(item.trim()));
+                    console.log(`Успешно загружен конфиг из ${latestConfig}`);
                 } else {
-                    console.error(`Не удалось найти SECTORS в ${configFile}`);
+                    console.error(`Не удалось найти SECTORS в ${latestConfig}`);
                 }
             } catch (error) {
-                console.error('Ошибка загрузки конфигурации:', error);
+                console.error('Ошибка загрузки конфига:', error);
             }
         }
 
