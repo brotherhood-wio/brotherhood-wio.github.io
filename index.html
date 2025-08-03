@@ -305,7 +305,7 @@
     <div class="controls">
         <label>
             <input type="checkbox" id="showSectorNumbers" style="transform: scale(2);"> Показывать номера секторов
-            <input type="checkbox" id="showCountryPlans" style="transform: scale(2); margin-left: 20px;">Показывать планы стран
+            <input type="checkbox" id="showCountryPlans" style="transform: scale(2); margin-left: 20px;"> Показывать планы стран
         </label>
         <br><br>
         <grayish><img style="filter: brightness(0.75);" height="20px" src="images/i.png" alt="i">При нехватке актуальных развед. данных они прогнозируются по известным</grayish>
@@ -676,17 +676,17 @@
                 const sectorsMatch = text.match(/SECTORS\s*=\s*\[([^\]]+)\]/);
                 if (sectorsMatch && sectorsMatch[1]) {
                     CONFIG.SECTORS = sectorsMatch[1].split(',').map(item => parseInt(item.trim()));
-                    console.log(`Успешно загружен конфиг из ${index.latest_config}`);
+                    console.log(`Успешно загружен latest config из ${index.latest_config}`);
                 } else {
-                    console.error(`Не удалось найти SECTORS в ${index.latest_config}`);
+                    console.error(`Не удалось найти SECTORS в latest config ${index.latest_config}`);
                 }
 
                 const pre_sectorsMatch = pre_text.match(/SECTORS\s*=\s*\[([^\]]+)\]/);
                 if (pre_sectorsMatch && pre_sectorsMatch[1]) {
                     CONFIG.SECTORS = pre_sectorsMatch[1].split(',').map(item => parseInt(item.trim()));
-                    console.log(`Успешно загружен конфиг из ${index.pre_latest_config}`);
+                    console.log(`Успешно загружен prelatest config из ${index.pre_latest_config}`);
                 } else {
-                    console.error(`Не удалось найти SECTORS в ${index.latest_config}`);
+                    console.error(`Не удалось найти SECTORS в prelatest config ${index.latest_config}`);
                 }
             } catch (error) {
                 console.error('Ошибка загрузки конфига:', error);
