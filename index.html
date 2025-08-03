@@ -248,7 +248,8 @@
 </head>
 <body>
     <div id="map-container">
-        <img id="base-map" src="images/Map.png" alt="Map image">
+        <img id="base-map" src="images/Map_low.png" style="filter: blur(30px);" alt="Map image">
+        <img id="full-map" src="" style="display: none;" alt="Map image">
         <img src="images/ОИС.jpg" alt="Overlay" style="opacity: 0.0; z-index: 1; position: absolute; top: 0; left: 0; width: 100%;">
 
         <img class="region flipxy" style="z-index: 2; left: 15.33%; top: 8.06%;"  width="13%" src="images/regions/f1.png">
@@ -650,6 +651,8 @@
                 updateSectors();
                 scaleRegions(1, 1);
                 AddLinkListeners();
+                document.getElementById("full-map").src="images/Map.png";
+                document.getElementById("full-map").style.display="block";
             });
         });
 
@@ -657,7 +660,7 @@
         async function loadConfig() {
             try {
                 // Сначала получаем индексный файл
-                
+
                 const indexResponse = await fetch('Datas/config_index.json');
                 const index = await indexResponse.json();
                 
