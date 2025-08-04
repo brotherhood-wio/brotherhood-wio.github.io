@@ -244,6 +244,20 @@
         grayish {
             color: rgb(190, 190, 190);
         }
+        .news-block {
+            max-width: 80%;
+            padding: 8px 12px;
+            margin: 8px;
+            margin-bottom: 10px;
+            border-radius: 20px;
+            font-family: Roboto;
+            font-size: 32px;
+            line-height: 1.4;
+            word-wrap: break-word;
+            position: relative;
+            box-shadow: none;
+            background-color: #353535;
+        }
     </style>
 </head>
 <body>
@@ -339,13 +353,7 @@
         <div class="section-header" id="initial-open" onclick="toggleSection(this)">
             <span class="myheader">&sel<br>Новости</span>
         </div>
-        <div class="section-content">
-            <obz>Э</obz>тот сайт — неоффициальный сайт по Братству WIO. Он создан не разработчиками игры, а игроками. Вот две основные мотивации сайта:<ul>
-            <li>Создание возможности влиться в комьюнити даже тех людей, у которых нет Телеграма.</li>
-            <br>
-            <li>Создать удобный способ быстро и легко узнавать все новости, информацию и аналитику в одном месте. Не нужно запускать игру, чтобы увидеть территории. Не нужно тратить много времени, разбираясь в новостях мировой политики.</li>
-            </ul>
-            
+        <div class="section-content" id="news-section">
         </div>
     </span>
     
@@ -654,6 +662,7 @@
                 AddLinkListeners();
                 document.getElementById("full-map").src="images/Map.png";
                 document.getElementById("full-map").style.display="block";
+                InitNews();
             });
         });
 
@@ -675,7 +684,7 @@
                 
                 const sectorsMatch = text.match(/SECTORS\s*=\s*\[([^\]]+)\]/);
                 if (sectorsMatch && sectorsMatch[1]) {
-                    CONFIG.SECTORS = sectorsMatch[1].split(',').map(item => parseInt(item.trim()));
+                    //CONFIG.SECTORS = sectorsMatch[1].split(',').map(item => parseInt(item.trim()));
                     console.log(`Успешно загружен latest config из ${index.latest_config}`);
                 } else {
                     console.error(`Не удалось найти SECTORS в latest config ${index.latest_config}`);
@@ -683,13 +692,22 @@
 
                 const pre_sectorsMatch = pre_text.match(/SECTORS\s*=\s*\[([^\]]+)\]/);
                 if (pre_sectorsMatch && pre_sectorsMatch[1]) {
-                    CONFIG.SECTORS = pre_sectorsMatch[1].split(',').map(item => parseInt(item.trim()));
+                    CONFIG.PRE_SECTORS = pre_sectorsMatch[1].split(',').map(item => parseInt(item.trim()));
                     console.log(`Успешно загружен prelatest config из ${index.pre_latest_config}`);
                 } else {
                     console.error(`Не удалось найти SECTORS в prelatest config ${index.latest_config}`);
                 }
             } catch (error) {
-                console.error('Ошибка загрузки конфига:', error);
+                console.error('Сайт запущен локально, загружены дефолтные конфиги ', error);
+                //                       1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 RT NR IB NV
+                CONFIG.SECTORS =        [0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 3, 3, 1, 2, 2, 2, 2, 3, 3, 3, 3, 2, 3, 3, 3, 0, 1, 2, 3];
+                CONFIG.PRE_SECTORS =    [0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 1, 2, 2, 2, 2, 3, 3, 3, 3, 2, 3, 3, 3, 0, 1, 2, 3];
+                CONFIG.ACTION_SECTORS = ["none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none", "none"]
+                CONFIG.SECTORS.forEach((sector, index) => {
+                    if(sector != CONFIG.PRE_SECTORS[index]) {
+                        CONFIG.ACTION_SECTORS[index] = "annex";
+                    }
+                });
             }
         }
 
@@ -917,6 +935,42 @@
         }
 
         // ====================== ФУНКЦИИ СЕКЦИЙ ======================
+
+        function InitNews() {
+            const container = document.getElementById("news-section");
+
+            CONFIG.ACTION_SECTORS.forEach((news, index) => {
+                if (news != "none") {
+                    const news_block = document.createElement("div");
+                    news_block.className = "news-block";
+
+                    CountryNumToName = {
+                        0: "Рития",
+                        1: "Нордхайм",
+                        2: "Иберия",
+                        3: "Новгория"
+                    }
+
+
+                    if (news == "annex") {
+                        let a1 = "";
+                        if (CONFIG.SECTORS[index] != 1) a1 = "а";
+                        let a2 = "";
+                        if (CONFIG.PRE_SECTORS[index] != 1) a2 = "а";
+                        let ObjCountry = CountryNumToName[CONFIG.SECTORS[index]];
+                        let Subj_country = CountryNumToName[CONFIG.PRE_SECTORS[index]];
+
+                        Html = `${ObjCountry} захватил${a1} ${index+1} сектор. Ранее им владел${a2} ${Subj_country}`
+                    }
+
+                    if (Html != null) {
+                        news_block.innerHTML = Html;
+                    }
+
+                    container.append(news_block);
+                }
+            });
+        }
 
         /**
          * Инициализирует секции
