@@ -783,15 +783,15 @@
                 
                 const sectorsMatch = text.match(/SECTORS\s*=\s*\[([^\]]+)\]/);
                 if (sectorsMatch && sectorsMatch[1]) {
-                    //CONFIG.SECTORS = sectorsMatch[1].split(',').map(item => parseInt(item.trim()));
-                    console.log(`Успешно загружен latest config из ${index.latest_config}`);
+                    CONFIG.SECTORS = sectorsMatch[1].replace(/\s/g, '').split(',').map(item => parseInt(item));
+                    console.log(`Успешно загружен latest config из ${index.latest_config}`, sectorsArray);
                 } else {
                     console.error(`Не удалось найти SECTORS в latest config ${index.latest_config}`);
                 }
 
                 const pre_sectorsMatch = pre_text.match(/SECTORS\s*=\s*\[([^\]]+)\]/);
                 if (pre_sectorsMatch && pre_sectorsMatch[1]) {
-                    CONFIG.PRE_SECTORS = pre_sectorsMatch[1].split(',').map(item => parseInt(item.trim()));
+                    CONFIG.PRE_SECTORS = pre_sectorsMatch[1].replace(/\s/g, '').split(',').map(item => parseInt(item));
                     console.log(`Успешно загружен prelatest config из ${index.pre_latest_config}`);
                 } else {
                     console.error(`Не удалось найти SECTORS в prelatest config ${index.latest_config}`);
