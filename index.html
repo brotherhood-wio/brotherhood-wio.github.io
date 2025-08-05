@@ -764,7 +764,6 @@
                 InitNews();
                 document.getElementById("main-text-container").style.display="block";
                 document.getElementById("loading").style.display="none";
-                document.setAttribute("translate", "no");
             });
         });
 
@@ -970,7 +969,7 @@
                 marker.setAttribute('orient', 'auto');
                 
                 const polygon = document.createElementNS(svgNS, "polygon");
-                polygon.setAttribute('points', '0 0, 10 3.5, 0 7');
+                polygon.setAttribute('points', '0 1, 6 3.5, 0 6');
                 polygon.setAttribute('fill', color);
                 
                 marker.appendChild(polygon);
@@ -1144,7 +1143,8 @@
                     textBlock.innerHTML = `Произошла ошибка. Это пояснение не существует.`;
 
                     if(event.target.innerHTML == "Ритийско-Иберийский Мир"||event.target.innerHTML == `Ритийско-Иберийский
-                Мир`) {
+                Мир`||event.target.innerHTML == `Ритийско-Иберийский
+                    Мир`) {
                         textBlock.innerHTML = `<span style="font-size: 32px;"><br><header-m>Ритийско-Иберийский Мир</header-m><o><no_replace>Союз - Ритийско-Иберийский Мир,
                 <div>
                     <div>Статус: <reddish>Расторгнут</reddish></div>
@@ -1164,7 +1164,8 @@
             </no_replace></span>`;
                     }
                     else if(event.target.innerHTML == "Нордхаймовско-Иберийский Мир"||event.target.innerHTML == "Нордхаймовско-Иберийского Мира"||event.target.innerHTML == `Нордхаймовско-Иберийский 
-                Мир`) {
+                Мир`||event.target.innerHTML == `Нордхаймовско-Иберийский 
+                    Мир`) {
                         textBlock.innerHTML = `<span style="font-size: 32px;"><br><header-m>Нордхаймовско-Иберийский Мир</header-m><o><no_replace>Союз - Нордхаймовско-Иберийский Мир,
                 <div>
                     <div>Статус: <greenish>Действителен</greenish></div>
@@ -1236,7 +1237,7 @@
                 </div>
             </no_replace></div>`;
                     }
-                    else if(event.target.innerHTML == "распил Нордхайма") {
+                    else if(event.target.innerHTML == "распил Нордхайма"||event.target.innerHTML == "распиле Нордхайма") {
                         textBlock.innerHTML = `<img src="images/partitionOfNordheim.jpg" style="width: 100%;"><div style="font-size: 32px;"><br><header-m>Договор о разделе Нoрдхайма</header-m><o><no_replace>
                 <div>
 <br>
