@@ -4,7 +4,7 @@
     <style>
         body {
             margin: 0;
-            background-color: rgb(25, 25, 25);
+            background-color: rgb(24, 22, 22);
             font-family: 'Arial', serif;
             font-weight: 0;
             font-size: 24px;
@@ -57,12 +57,21 @@
             border-radius: 5px;
             display: inline-block;
         }
+
         @font-face {
             font-family: 'Arial Black';
             src: url('fonts/arial-black.woff2') format('woff2');
             font-weight: 600;
             font-style: normal;
             font-display: swap;
+        }
+        @font-face {
+            font-family: 'CormorantSC Bold';
+            src: url('fonts/CormorantSC-Bold.woff2') format('woff2');
+        }
+        @font-face {
+            font-family: 'CormorantSC Medium';
+            src: url('fonts/CormorantSC-Medium.woff2') format('woff2');
         }
 
         .myheader {
@@ -348,6 +357,13 @@
     transform: scale(1.5);
   }
 }
+    .red-msg {
+        background-color: rgba(254, 44, 41, 0.1);
+    }
+    .red-msg.name {
+        color: white;
+        font-family: "CormorantSC Bold", sans-serif;
+    }
     </style>
 </head>
 <body>
@@ -642,6 +658,15 @@
                         </div>
                     </div>
                 </no_replace></span>
+            </div>
+        </span>
+
+        <span class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span class="myheader">&sel<br>Чаты</span>
+            </div>
+            <div class="section-content">
+                <div class="red-msg"><div class="name">asdfg</div></div>
             </div>
         </span>
         
